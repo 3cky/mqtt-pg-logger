@@ -4,7 +4,7 @@
 -- DROP TABLE JOURNAL;  -- do it manually. the automatic creation will abort/fail here.
 
 CREATE TABLE journal (
-    journal_id SERIAL PRIMARY KEY,
+    journal_id SERIAL,
 
     topic VARCHAR(256),
     text VARCHAR(4096),
@@ -15,8 +15,8 @@ CREATE TABLE journal (
     retain INTEGER,
 
     time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
+)
+PARTITION BY RANGE (time);
 
 COMMENT ON COLUMN journal.journal_id is 'Primary key';
 COMMENT ON COLUMN journal.message_id is 'Client message id (mid).';
@@ -29,9 +29,14 @@ COMMENT ON COLUMN journal.time is 'Message or insert time';
 
 
 -- used for regular clean up
-CREATE INDEX CONCURRENTLY journal_time_idx ON journal ( time );
+CREATE INDEX journal_time_idx ON journal ( time );
 
-CREATE INDEX CONCURRENTLY journal_name_idx ON journal ( topic );
+CREATE INDEX journal_name_idx ON journal ( topic );
+
+
+-- used by pg_partman
+CREATE TABLE journal_template (LIKE journal);
+ALTER TABLE journal_template ADD PRIMARY KEY (time);
 
 
 -- manual test
