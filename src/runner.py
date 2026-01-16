@@ -17,6 +17,8 @@ class Runner:
         self._store = ProxyStore(app_config.get_database_config())
 
         self._mqtt = MqttListener(app_config.get_mqtt_config())
+
+    def connect(self):
         self._mqtt.connect()
 
     def loop(self):

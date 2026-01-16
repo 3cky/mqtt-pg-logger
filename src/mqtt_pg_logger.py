@@ -79,6 +79,7 @@ def run_service(config_file, create, log_file, log_level, print_logs, systemd_mo
             creator.create_schema()
         else:
             runner = Runner(app_config)
+            runner.connect()
             runner.loop()
 
     finally:
