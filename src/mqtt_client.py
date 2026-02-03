@@ -163,7 +163,6 @@ class MqttClient:
         if self._client is not None:
             self._client.loop_stop()
             self._client.disconnect()
-            self._client.loop_forever()  # will block until disconnect complete
             self._client = None
             _logger.debug("%s was closed.", self.__class__.__name__)
 
